@@ -1,3 +1,5 @@
+import os
+
 from helpers import constants
 
 
@@ -17,8 +19,12 @@ def filter_fastq(
         length_bounds (tuple[int, int], optional): tuple of bounds length, also may set the one number - it will be max length size. Defaults to (0, 2**32).
         quality_threshold (int, optional): quality threshold (phred33 scale). Defaults to 0.
     """
-
-    with open(input_fastq, "r") as f, open(output_fastq, "w") as output_file:
+    output_path = constants.FILTERED_DIR + os.sep + output_fastq
+    with open(input_fastq, "r") as f, open(output_path, "w") as output_file:
+        
+        if not os.path.exists(constants.FILTERED_DIR):
+            os.makedirs(constants.FILTERED_DIR)
+            
         while True:
             header, sequence, plus, quality = [f.readline() for _ in range(4)]
             if not header:
