@@ -6,7 +6,7 @@ from helpers import constants
 def filter_fastq(
     input_fastq: str,
     output_fastq: str,
-    # gc_bounds: tuple[int, int] = constants.DEFAULT_GC_BOUNDS,
+    gc_bounds: tuple[int, int] = constants.DEFAULT_GC_BOUNDS,
     # length_bounds: tuple[int, int] = constants.DEFAULT_LENGTH_BOUNDS,
     # quality_threshold: int = constants.DEFAULT_QUALITY_THRESHOLD,
 ) -> None:
@@ -21,17 +21,57 @@ def filter_fastq(
     """
     output_path = constants.FILTERED_DIR + os.sep + output_fastq
     with open(input_fastq, "r") as f, open(output_path, "w") as output_file:
-        
         if not os.path.exists(constants.FILTERED_DIR):
             os.makedirs(constants.FILTERED_DIR)
-            
+
         while True:
             header, sequence, plus, quality = [f.readline() for _ in range(4)]
             if not header:
                 break
             one_read = (header, sequence, plus, quality)
+            is_in_gc_bounds(
+                sequence=one_read[1],
+                gc_bounds=to_tuple(gc_bounds),
+            )
             [output_file.write(line) for line in one_read]
 
 
+def to_tuple(input_value: int | tuple[int, int]) -> tuple[int, int]:
+    """Format int to (0, int) format.
+
+    Args:
+        input_value (int | tuple[int, int]): may be tuple, or one number.
+
+    Returns:
+        tuple[int, int]: correct tuple
+    """
+    if isinstance(input_value, int):
+        return (0, input_value)
+    return input_value
+
+
+def is_in_gc_bounds(
+    sequence: str,
+    gc_bounds: tuple[int, int],
+) -> bool:
+    """Check GC fraction in filter parameter
+
+    Args:
+        sequence (str): line with sequence from one read.
+        gc_bounds (tuple[int, int]): bounds of filter.
+
+    Returns:
+        bool: true or false
+    """
+    gc_fraction = (
+        (sequence.count("G") + sequence.count("C")) / len(sequence)
+    ) * 100
+    return (
+        gc_bounds[constants.LOWER_BOUND_INDEX]
+        < gc_fraction
+        < gc_bounds[constants.UPPER_BOUND_INDEX]
+    )
+
+
 if __name__ == "__main__":
-    filter_fastq("test_input_fastq.fastq", "test_output.fastq")
+    filter_fastq("test_input_fastq.fastq", "test_output.fastq", gc_bounds=40)
