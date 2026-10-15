@@ -6,8 +6,8 @@ from helpers import constants
 def filter_fastq(
     input_fastq: str,
     output_fastq: str,
-    gc_bounds: tuple[int, int] = constants.DEFAULT_GC_BOUNDS,
-    # length_bounds: tuple[int, int] = constants.DEFAULT_LENGTH_BOUNDS,
+    gc_bounds: int | tuple[int, int] = constants.DEFAULT_GC_BOUNDS,
+    length_bounds: tuple[int, int] = constants.DEFAULT_LENGTH_BOUNDS,
     # quality_threshold: int = constants.DEFAULT_QUALITY_THRESHOLD,
 ) -> None:
     """Function for filtering fastq file by quality settings.
@@ -33,7 +33,29 @@ def filter_fastq(
                 sequence=one_read[1],
                 gc_bounds=to_tuple(gc_bounds),
             )
+
             [output_file.write(line) for line in one_read]
+
+
+def is_in_length_bounds(
+    sequence: str,
+    length_bounds: tuple[int, int],
+) -> bool:
+    """Check that sequence length in filter parameter.
+
+    Args:
+        sequence (str): line with sequence from one read.
+        length_bounds (tuple[int, int]): filter bounds.
+
+    Returns:
+        bool: true or false
+    """
+
+    return (
+        length_bounds[constants.LOWER_BOUND_INDEX]
+        <= len(sequence)
+        < length_bounds[constants.UPPER_BOUND_INDEX]
+    )
 
 
 def to_tuple(input_value: int | tuple[int, int]) -> tuple[int, int]:
@@ -54,11 +76,11 @@ def is_in_gc_bounds(
     sequence: str,
     gc_bounds: tuple[int, int],
 ) -> bool:
-    """Check GC fraction in filter parameter
+    """Check GC fraction in filter parameter.
 
     Args:
         sequence (str): line with sequence from one read.
-        gc_bounds (tuple[int, int]): bounds of filter.
+        gc_bounds (tuple[int, int]): filter bounds.
 
     Returns:
         bool: true or false
