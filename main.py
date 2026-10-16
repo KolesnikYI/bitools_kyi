@@ -7,8 +7,8 @@ def filter_fastq(
     input_fastq: str,
     output_fastq: str,
     gc_bounds: int | tuple[int, int] = constants.DEFAULT_GC_BOUNDS,
-    # length_bounds: tuple[int, int] = constants.DEFAULT_LENGTH_BOUNDS,
-    # quality_threshold: int = constants.DEFAULT_QUALITY_THRESHOLD,
+    length_bounds: tuple[int, int] = constants.DEFAULT_LENGTH_BOUNDS,
+    quality_threshold: int = constants.DEFAULT_QUALITY_THRESHOLD,
 ) -> None:
     """Function for filtering fastq file by quality settings.
 
@@ -29,13 +29,20 @@ def filter_fastq(
             if not header:
                 break
             one_read = (header, sequence, plus, quality)
-            fastq.is_in_gc_bounds(
-                sequence=one_read[1],
-                gc_bounds=fastq.to_tuple(gc_bounds),
-            )
-
-            [output_file.write(line) for line in one_read]
+            if fastq.keep_in_file(
+                one_read,
+                gc_bounds,
+                length_bounds,
+                quality_threshold,
+            ):
+                [output_file.write(line) for line in one_read]
 
 
 if __name__ == "__main__":
-    filter_fastq("test_input_fastq.fastq", "test_output.fastq", gc_bounds=40)
+    filter_fastq(
+        "2test_input_fastq.fastq",
+        "test_output.fastq",
+        gc_bounds=80,
+        # length_bounds=40,
+        quality_threshold=30,
+    )
