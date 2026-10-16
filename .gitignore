@@ -1,2 +1,6 @@
-# MacOS файл - для гита не нужен
 .DS_Store
+.mypy_cache
+.python-version
+__pycache__
+*test*
+filtered/
