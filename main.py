@@ -65,9 +65,25 @@ def convert_multiline_fasta_to_oneline(
         if chunk:
             output_file.write("".join(chunk) + "\n")
 
-def parse_blast_output() -> None:
 
+def parse_blast_output(
+    input_file: str,
+    output_file: str,
+) -> None:
+    """Parsing proteins description from blast output.
 
-if __name__ == "__main__":
-    fasta_converter("test_fasta.fasta", "test_output_fasta.fasta")
-
+    Args:
+        input_file (str): path to blast_output file for parsing
+        output_file (str): name of ouptut parsed file
+    """
+    with open(input_file, "r") as f, open(output_file, "w") as output:
+        all_lines = f.readlines()
+        result = []
+        for index, line in enumerate(all_lines, start=1):
+            if constants.START_STRING_PARSING in line:
+                target_line = all_lines[index + 2]
+                result.append(
+                    target_line[: constants.END_LINE_INDEX].strip() + "\n"
+                )
+        result.sort()
+        output.write("".join(result) + "\n")

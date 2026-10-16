@@ -9,3 +9,6 @@ SEQUENCE_INDEX = 1
 QUALITY_INDEX = 3
 
 PHRED_CONSTANT = 33
+
+START_STRING_PARSING = "Sequences producing significant alignments"
+END_LINE_INDEX = 66
