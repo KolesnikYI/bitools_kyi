@@ -40,10 +40,31 @@ def filter_fastq(
 
 def fasta_converter(
     input_fasta: str,
-    output_fasta: str = 'converted',
+    output_fasta: str = "",
 ) -> None:
-    pass
+    """Convert multiple line fasta file to monosequence line file.
+
+    Args:
+        input_fasta (str): path to fasta file
+        output_fasta (str, optional): name of output file, default will "formated_input_file".
+    """
+    if not output_fasta:
+        output_fasta = "formated_" + input_fasta
+    with open(input_fasta, "r") as f, open(output_fasta, "w") as output_file:
+        chunk = []
+        for line in f:
+            line = line.rstrip("\n")
+            if line.startswith(">"):
+                if chunk:
+                    output_file.write("".join(chunk) + "\n")
+                    chunk.clear()
+                output_file.write(line + "\n")
+            else:
+                chunk.append(line)
+
+        if chunk:
+            output_file.write("".join(chunk) + "\n")
 
 
-# if __name__ == "__main__":
-# ...
+if __name__ == "__main__":
+    fasta_converter("test_fasta.fasta", "test_output_fasta.fasta")
