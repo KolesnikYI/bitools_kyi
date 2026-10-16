@@ -38,5 +38,12 @@ def filter_fastq(
                 [output_file.write(line) for line in one_read]
 
 
+def fasta_converter(
+    input_fasta: str,
+    output_fasta: str = 'converted',
+) -> None:
+    pass
+
+
 # if __name__ == "__main__":
-    # ...
+# ...
