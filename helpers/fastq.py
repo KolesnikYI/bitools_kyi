@@ -33,7 +33,7 @@ def is_in_length_bounds(
     return (
         length_bounds[constants.LOWER_BOUND_INDEX]
         <= len(sequence)
-        < length_bounds[constants.UPPER_BOUND_INDEX]
+        <= length_bounds[constants.UPPER_BOUND_INDEX]
     )
 
 
@@ -55,8 +55,8 @@ def is_in_gc_bounds(
     ) * 100
     return (
         gc_bounds[constants.LOWER_BOUND_INDEX]
-        < gc_fraction
-        < gc_bounds[constants.UPPER_BOUND_INDEX]
+        <= gc_fraction
+        <= gc_bounds[constants.UPPER_BOUND_INDEX]
     )
 
 
