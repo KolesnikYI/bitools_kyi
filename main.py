@@ -38,11 +38,5 @@ def filter_fastq(
                 [output_file.write(line) for line in one_read]
 
 
-if __name__ == "__main__":
-    filter_fastq(
-        "2test_input_fastq.fastq",
-        "test_output.fastq",
-        gc_bounds=80,
-        # length_bounds=40,
-        quality_threshold=30,
-    )
+# if __name__ == "__main__":
+    # ...
