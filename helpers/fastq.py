@@ -1,5 +1,6 @@
-from helpers import constants
 from statistics import mean
+
+from helpers import constants
 
 
 def to_tuple(input_value: int | tuple[int, int]) -> tuple[int, int]:
