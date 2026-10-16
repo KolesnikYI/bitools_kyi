@@ -38,7 +38,7 @@ def filter_fastq(
                 [output_file.write(line) for line in one_read]
 
 
-def fasta_converter(
+def convert_multiline_fasta_to_oneline(
     input_fasta: str,
     output_fasta: str = "",
 ) -> None:
@@ -46,10 +46,10 @@ def fasta_converter(
 
     Args:
         input_fasta (str): path to fasta file
-        output_fasta (str, optional): name of output file, default will "formated_input_file".
+        output_fasta (str, optional): name of output file, default will "convertered_input_file".
     """
     if not output_fasta:
-        output_fasta = "formated_" + input_fasta
+        output_fasta = "convertered_" + input_fasta
     with open(input_fasta, "r") as f, open(output_fasta, "w") as output_file:
         chunk = []
         for line in f:
@@ -65,6 +65,9 @@ def fasta_converter(
         if chunk:
             output_file.write("".join(chunk) + "\n")
 
+def parse_blast_output() -> None:
+
 
 if __name__ == "__main__":
     fasta_converter("test_fasta.fasta", "test_output_fasta.fasta")
+
